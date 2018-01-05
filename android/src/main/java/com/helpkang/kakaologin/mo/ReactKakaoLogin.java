@@ -27,6 +27,9 @@ import com.kakao.usermgmt.callback.MeResponseCallback;
 import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.kakao.usermgmt.UserManagement.requestMe;
 
 //import com.kakao.auth.ErrorResult;
@@ -73,7 +76,8 @@ public class ReactKakaoLogin {
         initialize();
         this.sessionCallback = new SessionCallback(promise);
         Session.getCurrentSession().addCallback(sessionCallback);
-        Session.getCurrentSession().open(AuthType.KAKAO_TALK, currentActivity);
+        // Session.getCurrentSession().open(AuthType.KAKAO_TALK, currentActivity);
+        Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, currentActivity);
 
 
     }
@@ -102,10 +106,13 @@ public class ReactKakaoLogin {
         Log.v(LOG_TAG, "kakao : handleResult");
         WritableMap response = Arguments.createMap();
 
-
         response.putString("id", userProfile.getId()+"");
         response.putString("nickname", userProfile.getNickname());
         response.putString("profile_image", userProfile.getProfileImagePath());
+        response.putString("thumbnail_image", userProfile.getThumbnailImagePath());
+        // 이메일 추가
+        response.putString("kaccount_email", userProfile.getEmail());
+        response.putString("kaccount_email_verified", String.valueOf(userProfile.getEmailVerified()));
 
         Session currentSession = Session.getCurrentSession();
         response.putString("accessToken", currentSession.getAccessToken());
@@ -115,7 +122,7 @@ public class ReactKakaoLogin {
 
 
     /**
-     * Class SessonCallback
+     * Class SessionCallback
      */
     private class SessionCallback implements ISessionCallback {
         private final Promise promise;
@@ -132,6 +139,13 @@ public class ReactKakaoLogin {
 
         @Override
         public void onSessionOpened() {
+
+            List<String> propertyKeys = new ArrayList<String>();
+            propertyKeys.add("kaccount_email");
+            propertyKeys.add("nickname");
+            propertyKeys.add("profile_image");
+            propertyKeys.add("thumbnail_image");
+
             Log.v(LOG_TAG, "kakao : SessionCallback.onSessionOpened");
             requestMe(new MeResponseCallback() {
                 @Override
@@ -150,6 +164,7 @@ public class ReactKakaoLogin {
                 @Override
                 public void onSuccess(UserProfile userProfile) {
                     removeCallback();
+                    Log.d(LOG_TAG, userProfile.toString());
                     WritableMap userMap = convertMapUserProfile(userProfile);
 //                    Log.d("userMap::::", userMap.toString());
                     promise.resolve(userMap);
@@ -166,7 +181,7 @@ public class ReactKakaoLogin {
                 private void removeCallback(){
                     Session.getCurrentSession().removeCallback(sessionCallback);
                 }
-            });
+            }, propertyKeys, true);
         }
 
         @Override
@@ -236,7 +251,7 @@ public class ReactKakaoLogin {
         @Override
         public IApplicationConfig getApplicationConfig() {
             return new IApplicationConfig() {
-                @Override
+                // @Override
                 public Activity getTopActivity() {
                     return currentActivity;
                 }
