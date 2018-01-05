@@ -17,7 +17,7 @@ public class KakaoLoginPackage implements ReactPackage {
         return Arrays.<NativeModule>asList(new KakaoLoginModule(reactContext));
     }
 
-    @Override
+    // @Override Deprecated from RN 0.47
     public List<Class<? extends JavaScriptModule>> createJSModules() {
         return Collections.emptyList();
     }
