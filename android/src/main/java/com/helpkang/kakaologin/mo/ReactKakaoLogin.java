@@ -151,7 +151,7 @@ public class ReactKakaoLogin {
                 @Override
                 public void onFailure(ErrorResult errorResult) {
                     removeCallback();
-                    promise.reject("onFaileure", "로그인 실패");
+                    promise.reject("message", "MESSAGE.LOGIN_FAILED");
 //                    callbackContext.error("kakao : SessionCallback.onSessionOpened.requestMe.onFailure - " + errorResult);
                 }
 
@@ -164,7 +164,7 @@ public class ReactKakaoLogin {
                 @Override
                 public void onSuccess(UserProfile userProfile) {
                     removeCallback();
-                    Log.d(LOG_TAG, userProfile.toString());
+                    // Log.d(LOG_TAG, userProfile.toString());
                     WritableMap userMap = convertMapUserProfile(userProfile);
 //                    Log.d("userMap::::", userMap.toString());
                     promise.resolve(userMap);
@@ -175,7 +175,8 @@ public class ReactKakaoLogin {
                 @Override
                 public void onNotSignedUp() {
                     removeCallback();
-                    promise.reject("onNotSignedUp", "로그인 취소");
+                    // promise.reject("onNotSignedUp", "로그인 취소");
+                    promise.reject("message", "MESSAGE.USER_CANCELLED");
 //                    callbackContext.error("this user is not signed up");
                 }
                 private void removeCallback(){
@@ -188,6 +189,8 @@ public class ReactKakaoLogin {
         public void onSessionOpenFailed(KakaoException exception) {
             if (exception != null) {
                 Log.v(LOG_TAG, "kakao : onSessionOpenFailed" + exception.toString());
+                // 동의안함 선택했을때
+                promise.reject("message", "MESSAGE." + exception.getErrorType().toString());
             }
         }
     }
