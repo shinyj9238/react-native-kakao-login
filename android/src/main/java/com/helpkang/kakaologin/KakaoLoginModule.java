@@ -2,6 +2,7 @@ package com.helpkang.kakaologin;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 
 import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Promise;
@@ -13,6 +14,7 @@ import com.kakao.auth.Session;
 
 public class KakaoLoginModule extends ReactContextBaseJavaModule implements ActivityEventListener {
 
+    private static final String LOG_TAG = "KakaoTalk";
     private ReactKakaoLogin rkl;
 
     public KakaoLoginModule(ReactApplicationContext reactContext) {
