@@ -54,13 +54,17 @@ RCT_REMAP_METHOD(login,
             NSLog(@"userId=%@", result.ID);
             NSLog(@"nickName=%@", [result propertyForKey:@"nickname"]);
             NSLog(@"profileImage=%@", [result propertyForKey:@"profile_image"]);
-            
+            // NSLog(@"email=%@", [result propertyForKey:@"email"]);
+            NSLog(@"email=%@", result.email);
+
             NSDictionary *userSession = @{
                                           @"accessToken": [KOSession sharedSession].accessToken,
                                           @"id": result.ID,
                                           @"nickname": [result propertyForKey:@"nickname"],
                                           // water0126
-                                          @"profile_image": [result propertyForKey:@"profile_image"] != nil ? [result propertyForKey:@"profile_image"] : @""
+                                          @"profile_image": [result propertyForKey:@"profile_image"] != nil ? [result propertyForKey:@"profile_image"] : @"",
+                                          // email 추가
+                                          @"email": [result propertyForKey:@"email"] != nil ? [result propertyForKey:@"email"] : @"",
                                           };
             //resolve(userSession);
             NSLog(@"successs.................");
