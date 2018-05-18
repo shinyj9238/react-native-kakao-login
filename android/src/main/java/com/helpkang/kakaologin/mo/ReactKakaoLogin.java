@@ -179,10 +179,11 @@ public class ReactKakaoLogin {
                     promise.reject("message", "MESSAGE.USER_CANCELLED");
 //                    callbackContext.error("this user is not signed up");
                 }
-                private void removeCallback(){
-                    Session.getCurrentSession().removeCallback(sessionCallback);
-                }
             }, propertyKeys, true);
+        }
+
+        private void removeCallback(){
+            Session.getCurrentSession().removeCallback(sessionCallback);
         }
 
         @Override
@@ -190,6 +191,7 @@ public class ReactKakaoLogin {
             if (exception != null) {
                 Log.v(LOG_TAG, "kakao : onSessionOpenFailed" + exception.toString());
                 // 동의안함 선택했을때
+                removeCallback();
                 promise.reject("message", "MESSAGE." + exception.getErrorType().toString());
             }
         }
